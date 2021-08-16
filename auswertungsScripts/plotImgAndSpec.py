@@ -68,5 +68,52 @@ def multiPlot():
         ax1.imshow(D, interpolation='none')
         plt.show()
         
-#singlePlot("1628676495")
-multiPlot()
+#singlePlot("1629104036")
+#multiPlot()
+
+
+def plotCurve():
+    startLength = 430
+    endLength = 700
+    step = 10
+    fig, (ax1,ax2) = plt.subplots(2, gridspec_kw={'wspace': 0}, facecolor='w',figsize=(11,8))
+    intensities = []
+    wavelengths = []
+    for i in range(startLength, endLength+step, step):
+        fileImg = r"C:\Users\Labor_NLO-Admin\Desktop\GhostLaser\scripts\powerCurve\\"+str(i)+"nm_CEMOS.data"
+        file = r"C:\Users\Labor_NLO-Admin\Desktop\GhostLaser\scripts\powerCurve\\"+str(i)+"nm_STS.spec"
+        dataSpec = pd.read_csv(file, sep=',')
+        dataSpec.plot(ax = ax2,x='wavelength', y='intensity', c ='blue', label='Spectrum')
+        dataImg = pd.read_csv(fileImg, sep=',')
+        
+        dataImg.drop(dataImg.columns[0], axis=1, inplace=True)
+       
+        D = dataImg.to_numpy()
+        intensities.append(np.sum(D))
+        wavelengths.append(i)
+
+    ax1.plot(wavelengths,intensities)
+    
+    
+    ax1.tick_params(axis="x",direction="in")
+    ax1.tick_params(axis="y",direction="in")
+    
+    ax1.tick_params(labelleft=True)
+    ax1.set_xlabel('Wavelength', fontsize=16)
+    ax1.set_ylabel('Intensity', fontsize=16)
+    
+    ax2.tick_params(axis="x",direction="in")
+    ax2.tick_params(axis="y",direction="in")
+    ax2.tick_params(labelleft=True)
+    ax2.set_xlabel('Wavelength', fontsize=16)
+    ax2.set_ylabel('Intensity', fontsize=16)
+    
+    ax2.get_legend().remove()
+    ax2.set_xlim(420,710)
+    ax1.set_xlim(420,710)
+    plt.show()
+    fig.savefig("PowerCurve.pdf");
+    
+plotCurve()
+
+
